@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Journal.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Journal
 {
@@ -20,7 +21,8 @@ namespace Journal
     		builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
-
+            builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton<JournalDatabase>();
             return builder.Build();
         }
     }

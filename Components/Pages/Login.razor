@@ -1,0 +1,52 @@
+﻿@page "/login"
+@using global::Journal.Services
+@inject UserService UserService
+@inject NavigationManager Nav
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-title">Welcome Back!</div>
+
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="auth-error">@message</div>
+        }
+
+        <div class="input-with-icon">
+            <i class="icon bi bi-person-fill"></i>
+            <input class="form-control" placeholder="Username" @bind="username" />
+        </div>
+
+        <div class="input-with-icon">
+            <i class="icon bi bi-lock-fill"></i>
+            <input type="password" class="form-control" placeholder="Password" @bind="password" />
+        </div>
+
+        <button class="auth-btn" @onclick="LoginUser">
+            Login
+        </button>
+
+        <div class="auth-footer">
+            <span>Don't have an account? </span>
+            <a href="/register">Sign Up</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? username;
+    private string? password;
+    private string? message;
+
+    private void LoginUser()
+    {
+        if (UserService.Login(username, password))
+        {
+            Nav.NavigateTo("/journal");
+        }
+        else
+        {
+            message = "Invalid username or password.";
+        }
+    }
+}

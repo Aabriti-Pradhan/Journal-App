@@ -1,0 +1,52 @@
+﻿@page "/register"
+@using global::Journal.Services
+@inject UserService UserService
+@inject NavigationManager Nav
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-title">Create Account</div>
+
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <div class="auth-error">@message</div>
+        }
+
+        <div class="input-with-icon">
+            <i class="icon bi bi-person-fill"></i>
+            <input class="form-control" placeholder="Username" @bind="username" />
+        </div>
+
+        <div class="input-with-icon">
+            <i class="icon bi bi-lock-fill"></i>
+            <input type="password" class="form-control" placeholder="Password" @bind="password" />
+        </div>
+
+        <button class="auth-btn" @onclick="RegisterUser">
+            Sign Up
+        </button>
+
+        <div class="auth-footer">
+            <span>Already have an account? </span>
+            <a href="/login">Login</a>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? username;
+    private string? password;
+    private string? message;
+
+    private void RegisterUser()
+    {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            message = "Username and password are required.";
+            return;
+        }
+
+        UserService.Register(username, password);
+        Nav.NavigateTo("/login");
+    }
+}
