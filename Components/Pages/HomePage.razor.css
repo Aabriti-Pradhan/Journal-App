@@ -1,0 +1,127 @@
+﻿.journal-container {
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Left Panel */
+.journal-left {
+    width: 350px;
+    background: #E8D1C5;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.journal-search {
+    padding: 1rem;
+}
+
+    .journal-search input {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        outline: none;
+        font-size: 1rem;
+    }
+
+.journal-notes-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 0.5rem 1rem;
+}
+
+.journal-note-card {
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.5rem;
+    background: white;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+    .journal-note-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .journal-note-card.selected {
+        background: #667eea;
+        color: white;
+    }
+
+/* Right Panel */
+.journal-right {
+    flex-grow: 1;
+    background: #f8f8f8;
+    padding: 2rem;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.journal-note-content {
+    width: 80%;
+    max-width: 700px;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.note-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    border: none;
+    outline: none;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    background: transparent;
+}
+
+.note-body {
+    flex-grow: 1;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    border: none;
+    outline: none;
+    resize: none;
+    width: 100%;
+    background: transparent;
+    min-height: 300px;
+}
+
+    .note-body:-webkit-autofill,
+    .note-title:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    }
+
+.journal-note-content .btn {
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 0.5rem 1.5rem;
+}
+
+.journal-placeholder {
+    text-align: center;
+    color: #888;
+    font-size: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+    .journal-placeholder h3 {
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    .journal-placeholder p {
+        max-width: 400px;
+    }
+

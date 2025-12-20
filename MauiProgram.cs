@@ -23,6 +23,7 @@ namespace Journal
 #endif
             builder.Services.AddSingleton<UserService>();
             builder.Services.AddSingleton<JournalDatabase>();
+            builder.Services.AddSingleton<NoteService>();
             return builder.Build();
         }
     }

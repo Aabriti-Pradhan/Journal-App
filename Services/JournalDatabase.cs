@@ -10,7 +10,7 @@ using SQLite;
 
 namespace Journal.Services
 {
-    internal class JournalDatabase
+    public class JournalDatabase
     {
         private readonly SQLiteConnection _db;
 
@@ -21,9 +21,12 @@ namespace Journal.Services
                 "journal.db"
             );
 
+            Console.WriteLine(dbPath);
+
             _db = new SQLiteConnection(dbPath);
 
             _db.CreateTable<User>();
+            _db.CreateTable<Note>();
         }
 
         public SQLiteConnection Database => _db;

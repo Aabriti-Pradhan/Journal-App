@@ -1,0 +1,151 @@
+﻿@page "/journal"
+@inject NoteService noteService
+
+<div class="journal-container">
+    <!-- Left Panel -->
+    <div class="journal-left">
+        <div class="journal-search">
+            <input type="text" placeholder="Search notes..." @bind="searchTerm" />
+        </div>
+        <div class="d-flex justify-content-end mb-2 me-3">
+            <button class="btn btn-light add-note-btn" @onclick="AddNewNote">
+                <i class="bi bi-plus-lg"></i>
+            </button>
+        </div>
+        <div class="journal-notes-list">
+            @foreach (var note in FilteredNotes)
+            {
+                <div class="journal-note-card @(selectedNote == note ? "selected" : "")">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div @onclick="() => SelectNote(note)" style="flex-grow:1; cursor:pointer;">
+                            <h5>@note.Title</h5>
+                            <p>@note.Snippet</p>
+                        </div>
+                        <button class="btn btn-sm btn-danger ms-2" @onclick="() => DeleteNote(note)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="journal-right">
+    @if (selectedNote != null)
+    {
+        <div class="journal-note-content">
+            <input type="text"
+                   placeholder="Title"
+                   @bind="selectedNote.Title"
+                   @oninput="UpdateSnippet"
+                   class="note-title" />
+
+            <textarea placeholder="Write your journal..."
+                      @bind="selectedNote.Content"
+                      @oninput="UpdateSnippetFromContent"
+                      class="note-body"></textarea>
+
+            <div class="text-end mt-2">
+                <button class="btn btn-primary" @onclick="SaveNote">Save</button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="journal-placeholder">
+            <h3>Welcome to your Journal!</h3>
+            <p>Select a note from the left to start journaling.</p>
+        </div>
+    }
+</div>
+
+</div>
+
+@code {
+    private string searchTerm = "";
+    private List<Note> notes = new();
+    private Note? selectedNote;
+
+    private IEnumerable<Note> FilteredNotes => string.IsNullOrWhiteSpace(searchTerm)
+        ? notes
+        : notes.Where(n => n.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase));
+
+    protected override async Task OnInitializedAsync()
+    {
+        notes = await noteService.GetNotesAsync();
+    }
+
+    private void AddNewNote()
+    {
+        var note = new Note { Title = "New Note", Content = "", Snippet = "" };
+        notes.Insert(0, note);
+        selectedNote = note;
+    }
+
+    private void SelectNote(Note note)
+    {
+        selectedNote = note;
+    }
+
+    private void UpdateSnippet(ChangeEventArgs? e)
+    {
+        if (selectedNote != null)
+        {
+            selectedNote.Snippet = string.IsNullOrWhiteSpace(selectedNote.Content)
+                ? selectedNote.Title
+                : (selectedNote.Content.Length > 20 
+                    ? selectedNote.Content[..20] + "..." 
+                    : selectedNote.Content);
+        }
+    }
+
+    private async Task SaveNote()
+    {
+        if (selectedNote == null) return;
+
+        selectedNote.Snippet = string.IsNullOrWhiteSpace(selectedNote.Content)
+            ? selectedNote.Title
+            : (selectedNote.Content.Length > 20
+                ? selectedNote.Content[..20] + "..."
+                : selectedNote.Content);
+
+        bool isNew = selectedNote.Id == 0;
+
+        if (isNew)
+            await noteService.AddNoteAsync(selectedNote);
+        else
+            await noteService.UpdateNoteAsync(selectedNote);
+
+        notes = await noteService.GetNotesAsync();
+
+        selectedNote = notes.FirstOrDefault(n => n.Id == selectedNote.Id);
+    }
+
+
+
+    private void UpdateSnippetFromContent(ChangeEventArgs e)
+    {
+        if (selectedNote == null) return;
+
+        selectedNote.Snippet = string.IsNullOrWhiteSpace(selectedNote.Content)
+            ? selectedNote.Title
+            : (selectedNote.Content.Length > 20
+                ? selectedNote.Content[..20] + "..."
+                : selectedNote.Content);
+    }
+
+    private async Task DeleteNote(Note note)
+    {
+        if (note == null) return;
+
+        await noteService.DeleteNoteAsync(note);
+
+        notes.Remove(note);
+
+        if (selectedNote == note)
+            selectedNote = null;
+    }
+
+
+}
